@@ -34,15 +34,14 @@ function shiftGrain(x,y){
 
 function randomShift(x,y){
   let options = []
-  if (grid[x , y + 1] != 1) { 
-    _.times(100, () => { options.push([x , y + 1]) })
+  if (grid[y + 1][x] != 1) { 
+    _.times(1, () => { options.push([x, y + 1]) })
   }
-  if (grid[x + 1, y + 1] != 1) { options.push([x + 1, y + 1]) }
-  if (grid[x - 1, y + 1] != 1) { options.push([x - 1, y + 1]) }
+  if (grid[y + 1][x + 1] != 1) { options.push([x + 1, y + 1]) }
+  if (grid[y + 1][x - 1] != 1) { options.push([x - 1, y + 1]) }
 
   randomPick = options[_.random(options.length - 1)]
 
-  console.log(randomPick)
   grid[randomPick[1]][randomPick[0]] = 1
   grid[y][x] = null
 }
@@ -65,10 +64,6 @@ function drawSand(){
   }
 }
 
-function paint(event) {
-  grid[event.layerY][event.layerX] = 1
-}
-
 function addSand(x,y){
   grid[y][x] = 1
 }
@@ -82,14 +77,14 @@ function tick(){
 }
 
 canvas.addEventListener('click', function(event) {
-  paint(event)
+  let clickCoords = getMousePos(canvas, event)
+  grid[Math.floor(clickCoords.y)][Math.floor(clickCoords.x)] = 1
 });
 
 window.addEventListener('keypress', handleKeyPress)
 
 function handleKeyPress(e){
   const offset = width / 2
-  console.log(keys[e.key])
   if (keys[e.key]){
     keys[e.key].forEach((row, y) => {
       row.forEach((point, x) => {
@@ -97,5 +92,16 @@ function handleKeyPress(e){
       })
     })
     drawSand()
+  }
+}
+
+function  getMousePos(canvas, evt) {
+  var rect = canvas.getBoundingClientRect(), // abs. size of element
+      scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
+      scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
+
+  return {
+    x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
+    y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
   }
 }
