@@ -33,16 +33,30 @@ function shiftGrain(x,y){
 }
 
 function randomShift(x,y){
-  let options = []
-  if (grid[y + 1][x] != 1) { 
-    _.times(1, () => { options.push([x, y + 1]) })
+  let options = {
+    down: [x, y + 1],
+    left: [x - 1, y + 1],
+    right: [x + 1, y + 1]
   }
-  if (grid[y + 1][x + 1] != 1) { options.push([x + 1, y + 1]) }
-  if (grid[y + 1][x - 1] != 1) { options.push([x - 1, y + 1]) }
 
-  randomPick = options[_.random(options.length - 1)]
+  if (grid[y + 1][x])     { options.down = null }
+  if (grid[y + 1][x + 1]) { options.right = null }
+  if (grid[y + 1][x - 1]) { options.left = null }
 
-  grid[randomPick[1]][randomPick[0]] = 1
+  r = _.random(100)
+
+  let shiftCoord
+  if (options.down && r <= 96) {
+    shiftCoord = options.down
+  } else if (options.left && options.right) {
+    shiftCoord = r > 50 ? options.left : options.right
+  } else if (options.left) { 
+    shiftCoord = options.left 
+  } else if (options.right) { 
+    shiftCoord = options.right 
+  }
+
+  grid[shiftCoord[1]][shiftCoord[0]] = 1
   grid[y][x] = null
 }
 

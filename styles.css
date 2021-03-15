@@ -3,3 +3,7 @@ canvas {
   width: 100%;
   max-width: 450px;
 }
+
+* {
+  font-family: monospace;
+}
