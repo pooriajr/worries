@@ -10,8 +10,7 @@ for(let y = 0; y < height; y++) {
   grid[y] = (new Array(width))
 }
 
-const tickInterval = window.setInterval(tick, 100);
-// window.setTimeout(() => {window.clearInterval(tickInterval)}, 2000)
+const tickInterval = window.setInterval(tick, 60);
 
 function shiftSand(){
   let y = height - 1
@@ -36,7 +35,7 @@ function shiftGrain(x,y){
 function randomShift(x,y){
   let options = []
   if (grid[x , y + 1] != 1) { 
-    _.times(10, () => { options.push([x , y + 1]) })
+    _.times(100, () => { options.push([x , y + 1]) })
   }
   if (grid[x + 1, y + 1] != 1) { options.push([x + 1, y + 1]) }
   if (grid[x - 1, y + 1] != 1) { options.push([x - 1, y + 1]) }
