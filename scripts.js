@@ -49,10 +49,10 @@ function randomShift(x,y){
   if (options.down && r <= 96) {
     shiftCoord = options.down
   } else if (options.left && options.right) {
-    shiftCoord = r > 50 ? options.left : options.right
-  } else if (options.left) { 
+    shiftCoord = (r % 2 ? options.left : options.right)
+  } else if (options.left && !options.right) { 
     shiftCoord = options.left 
-  } else if (options.right) { 
+  } else if (options.right && !options.left) { 
     shiftCoord = options.right 
   }
 
