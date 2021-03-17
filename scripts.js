@@ -43,10 +43,10 @@ function randomShift(x,y){
   if (grid[y + 1][x + 1]) { options.right = null }
   if (grid[y + 1][x - 1]) { options.left = null }
 
-  r = _.random(100)
+  r = _.random(1000)
 
   let shiftCoord
-  if (options.down && r <= 96) {
+  if (options.down && r <= 998) {
     shiftCoord = options.down
   } else if (options.left && options.right) {
     shiftCoord = (r % 2 ? options.left : options.right)
@@ -97,25 +97,46 @@ canvas.addEventListener('click', function(event) {
 
 window.addEventListener('keypress', handleKeyPress)
 
-function handleKeyPress(e){
-  const offset = width / 2
-  if (keys[e.key]){
-    keys[e.key].forEach((row, y) => {
-      row.forEach((point, x) => {
-        grid[y + 10][x + offset] = point
-      })
+function addLetterToGrid(letter, coord) {
+  keys[letter].forEach((row, y) => {
+    row.forEach((point, x) => {
+      grid[coord[1] + y][coord[0] + x] = point
     })
-    drawSand()
+  })
+}
+
+function handleKeyPress(e){
+  const coord = [width *.5 , height * .2]
+  if (keys[e.key]){
+    addLetterToGrid(e.key, coord)
   }
+  drawSand()
 }
 
 function  getMousePos(canvas, evt) {
   var rect = canvas.getBoundingClientRect(), // abs. size of element
-      scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
-      scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
+    scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
+    scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
 
   return {
     x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
     y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
   }
+}
+
+function inputWorry(){
+  let worry = window.prompt("What's got you worried?")
+  addStringToGrid(worry)
+  drawSand()
+}
+
+function addStringToGrid(string){
+  let letters = filterValidLetters(string)
+  letters.forEach((letter, i)=> {
+    addLetterToGrid(letter, [5 * i , 10])
+  })
+}
+
+function filterValidLetters(string){
+  return string.split('').filter(letter => keys[letter])
 }
