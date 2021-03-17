@@ -1,9 +1,12 @@
+const { fonts, renderPixels } = require('js-pixel-fonts');
+const _ = require('lodash')
+
 const canvas = document.querySelector('canvas'); 
 const ctx = canvas.getContext('2d'); 
 ctx.fillStyle = 'white'
 
-const width = 150;
-const height = 150;
+const width = 300;
+const height = 300;
 
 const grid = new Array(height)
 for(let y = 0; y < height; y++) {
@@ -95,23 +98,23 @@ canvas.addEventListener('click', function(event) {
   grid[Math.floor(clickCoords.y)][Math.floor(clickCoords.x)] = 1
 });
 
-window.addEventListener('keypress', handleKeyPress)
+// window.addEventListener('keypress', handleKeyPress)
 
-function addLetterToGrid(letter, coord) {
-  keys[letter].forEach((row, y) => {
-    row.forEach((point, x) => {
-      grid[coord[1] + y][coord[0] + x] = point
-    })
-  })
-}
+// function addLetterToGrid(letter, coord) {
+//   keys[letter].forEach((row, y) => {
+//     row.forEach((point, x) => {
+//       grid[coord[1] + y][coord[0] + x] = point
+//     })
+//   })
+// }
 
-function handleKeyPress(e){
-  const coord = [width *.5 , height * .2]
-  if (keys[e.key]){
-    addLetterToGrid(e.key, coord)
-  }
-  drawSand()
-}
+// function handleKeyPress(e){
+//   const coord = [width *.5 , height * .2]
+//   if (keys[e.key]){
+//     addLetterToGrid(e.key, coord)
+//   }
+//   drawSand()
+// }
 
 function  getMousePos(canvas, evt) {
   var rect = canvas.getBoundingClientRect(), // abs. size of element
@@ -126,9 +129,22 @@ function  getMousePos(canvas, evt) {
 
 function inputWorry(){
   let worry = window.prompt("What's got you worried?")
-  addStringToGrid(worry)
+  addPixelArrayToGrid(renderPixels(worry, fonts.sevenPlus))
   drawSand()
 }
+
+document.getElementById('inputWorry').addEventListener('click', inputWorry)
+
+function addPixelArrayToGrid(array){
+  let coord = [10, 10]
+  array.forEach((row, y) => {
+    row.forEach((point, x) => {
+      grid[coord[1] + y][coord[0] + x] = point
+    })
+  })
+}
+
+addPixelArrayToGrid(renderPixels("What's got you worried?", fonts.sevenPlus))
 
 function addStringToGrid(string){
   let letters = filterValidLetters(string)
